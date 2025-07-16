@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { timeRecordsService } from "../../services/api";
-
+import NavbarPage from "../navbar/page";
 export default function DashboardPage() {
     //Always initiate state variables
   const [user, setUser] = useState(null);
@@ -152,10 +152,7 @@ export default function DashboardPage() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    router.push("/");
-  };
+
 
   const userRecords = timeRecords
     .filter((record) => record.employeeId === user?.employee?.id)
@@ -251,56 +248,7 @@ export default function DashboardPage() {
 
     
 
-      <header className="bg-gray-800 shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-7">
-            <div>
-              <h1 className="text-2xl font-bold text-white">
-                Exam <span className="text-teal-400">track</span>
-              </h1>
-            </div>
-            <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-4">
-                <button className="text-gray-300 hover:text-white text-sm">
-                  My Request
-                </button>
-                <button className="text-gray-300 hover:text-white text-sm">
-                  Adminstration Tools
-                </button>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-semibold">
-                    {user.employee?.firstName?.charAt(0) || "U"}
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-gray-300 text-sm">My Account</span>
-                  <svg
-                    className="w-4 h-4 text-gray-300"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </div>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium cursor-pointer"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <NavbarPage />
 
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
