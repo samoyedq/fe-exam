@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { timeRecordsService } from "../../services/api";
 
 export default function DashboardPage() {
+    //Always initiate state variables
   const [user, setUser] = useState(null);
   const [timeRecords, setTimeRecords] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,6 +19,7 @@ export default function DashboardPage() {
 
   const recordsPerPage = 10;
 
+  //fetch the data in db.json
   useEffect(() => {
     const userData = localStorage.getItem("user");
     if (!userData) {
@@ -29,12 +31,12 @@ export default function DashboardPage() {
     fetchTimeRecords();
   }, [router]);
 
+  //fetch time records using the service via axios
   const fetchTimeRecords = async () => {
     try {
       const data = await timeRecordsService.getTimeRecords();
       setTimeRecords(data.timeRecords);
 
-      // Check for today's record to determine button state
       if (user) {
         const today = new Date().toISOString().split("T")[0];
         const todayRecord = data.timeRecords.find(
@@ -67,6 +69,7 @@ export default function DashboardPage() {
     }, 5000);
   };
 
+  //time in
   const handleTimeIn = async () => {
     if (!user) return;
     setShowModal(false);
@@ -96,6 +99,7 @@ export default function DashboardPage() {
     }
   };
 
+  //timeout
   const handleTimeOut = async () => {
     if (!user) return;
     setShowModal(false);
@@ -125,15 +129,16 @@ export default function DashboardPage() {
     }
   };
 
+    // Handle time in/out button click
   const handleTimeAction = () => {
     const currentTime = new Date().toLocaleTimeString();
 
     if (!timeInOut.timeIn) {
-      // Show confirmation for Time In
+     
       setCurrentAction("timeIn");
       setShowModal(true);
     } else if (!timeInOut.timeOut) {
-      // Show confirmation for Time Out
+  
       setCurrentAction("timeOut");
       setShowModal(true);
     }
@@ -152,17 +157,11 @@ export default function DashboardPage() {
     router.push("/");
   };
 
-  const getCurrentDateTime = () => {
-    const now = new Date();
-    return now.toLocaleDateString() + " " + now.toLocaleTimeString();
-  };
-
-  // Filter records for current user
   const userRecords = timeRecords
     .filter((record) => record.employeeId === user?.employee?.id)
-    .slice(0, 100); // Limit to maximum 100 records
+    .slice(0, 100); 
 
-  // Pagination logic
+
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
   const currentRecords = userRecords.slice(
@@ -171,7 +170,7 @@ export default function DashboardPage() {
   );
   const totalPages = Math.ceil(userRecords.length / recordsPerPage);
 
-  // Button text and color based on time in/out state
+
   const getButtonText = () => {
     if (!timeInOut.timeIn) {
       return "Time In";
@@ -182,20 +181,12 @@ export default function DashboardPage() {
     }
   };
 
-  const getButtonClass = () => {
-    if (!timeInOut.timeIn) {
-      return "bg-green-600 hover:bg-green-700";
-    } else if (!timeInOut.timeOut) {
-      return "bg-blue-600 hover:bg-blue-700";
-    } else {
-      return "bg-gray-400 cursor-not-allowed";
-    }
-  };
 
   const isButtonDisabled = () => {
     return timeInOut.timeIn && timeInOut.timeOut;
   };
 
+  //lazy loading
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
@@ -212,7 +203,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Confirmation Modal */}
+ 
       {showModal && (
         <div
           className="fixed inset-0 overflow-y-auto h-full w-full z-50 flex items-start pt-20 justify-center"
@@ -258,8 +249,8 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Header */}
-      {/* Header */}
+    
+
       <header className="bg-gray-800 shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-7">
@@ -311,10 +302,8 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
-          {/* Message Display */}
           {message && (
             <div
               className={`mb-4 p-4 rounded-md ${
@@ -327,9 +316,8 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* Two Column Layout */}
+         
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 ">
-            {/* My Attendance Section */}
             <div className="bg-gradient-to-r from-blue-800 to-blue-600 rounded-lg shadow-lg text-white">
               <div className="px-6 py-4 flex justify-between items-center">
                 <h3 className="text-lg font-semibold">My Attendance</h3>
@@ -364,48 +352,72 @@ export default function DashboardPage() {
                           </th>
                         </tr>
                       </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-  {currentRecords.slice(0, 10).map((record) => (
-    <tr key={record.id}>
-      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-        {new Date(record.date).toLocaleDateString(
-          "en-US",
-          {
-            month: "2-digit",
-            day: "2-digit",
-            year: "numeric",
-          }
-        )}
-      </td>
-      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-        {record.timeIn || "-"}
-      </td>
-      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-        {record.timeOut || "-"}
-      </td>
-    </tr>
-  ))}
-  {/* Fill empty rows to maintain consistent height when less than 10 records */}
-  {Array.from({
-    length: Math.max(0, 10 - currentRecords.length),
-  }).map((_, index) => (
-    <tr key={`empty-${index}`}>
-      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-        -
-      </td>
-      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-        -
-      </td>
-      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-        -
-      </td>
-    </tr>
-  ))}
-</tbody>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {currentRecords.slice(0, 10).map((record) => (
+                          <tr key={record.id}>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                              {new Date(record.date).toLocaleDateString(
+                                "en-US",
+                                {
+                                  month: "2-digit",
+                                  day: "2-digit",
+                                  year: "numeric",
+                                }
+                              )}
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                              {record.timeIn
+                                ? new Date(
+                                    `1970-01-01T${
+                                      record.timeIn.length <= 8
+                                        ? record.timeIn
+                                        : "00:00:00"
+                                    }`
+                                  ).toLocaleTimeString("en-US", {
+                                    hour12: true,
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })
+                                : "-"}
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                              {record.timeOut
+                                ? new Date(
+                                    `1970-01-01T${
+                                      record.timeOut.length <= 8
+                                        ? record.timeOut
+                                        : "00:00:00"
+                                    }`
+                                  ).toLocaleTimeString("en-US", {
+                                    hour12: true,
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })
+                                : "-"}
+                            </td>
+                          </tr>
+                        ))}
+
+                        {Array.from({
+                          length: Math.max(0, 10 - currentRecords.length),
+                        }).map((_, index) => (
+                          <tr key={`empty-${index}`}>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                              -
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                              -
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                              -
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
                     </table>
                   </div>
 
-                  {/* Pagination - Show only if more than 10 records */}
+               
                   {userRecords.length > 10 && (
                     <div className="bg-gray-50 px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
                       <div className="flex-1 flex justify-between sm:hidden">
@@ -498,7 +510,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Leave Credits Section */}
+            {/* Leave Credits  */}
             <div className="bg-gradient-to-r from-blue-800 to-blue-600 rounded-lg shadow-lg text-white h-[49%] ">
               <div className="px-6 py-4 flex justify-between items-center">
                 <h3 className="text-lg font-semibold">Leave Credits</h3>
@@ -569,12 +581,12 @@ export default function DashboardPage() {
                             0
                           </td>
                         </tr>
-                        {/* Fill empty rows to make it 10 rows total */}
+                      
                       </tbody>
                     </table>
                   </div>
 
-                  {/* Pagination for Leave Credits */}
+           
                 </div>
               </div>
             </div>

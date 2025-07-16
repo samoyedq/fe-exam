@@ -27,7 +27,7 @@ export default function ForgotPasswordPage() {
     try {
       await authService.forgotPassword(email);
       showMessage("Password reset link sent to your email!", "success");
-      // Redirect to login after 3 seconds
+
       setTimeout(() => {
         router.push("");
       }, 3000);

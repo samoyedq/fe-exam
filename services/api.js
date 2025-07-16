@@ -1,5 +1,5 @@
 import api from '../lib/axios';
-
+//Api caller 
 export const authService = {
   login: async (email, password) => {
     const response = await api.post('/api/auth/login', { email, password });
@@ -37,7 +37,7 @@ export const timeRecordsService = {
   }
 };
 
-// Employee services
+
 export const employeeService = {
   getEmployees: async () => {
     const response = await api.get('/api/employees');

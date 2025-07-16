@@ -1,3 +1,4 @@
+//hris time in route
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
@@ -20,12 +21,11 @@ export async function POST(request) {
       );
     }
     
-    // Generate new ID
+  
     const newId = dbData.timeRecords.length > 0 
       ? Math.max(...dbData.timeRecords.map(r => r.id)) + 1 
       : 1;
-    
-    // Create new time record
+
     const newRecord = {
       id: newId,
       employeeId,
