@@ -29,14 +29,14 @@ export default function NavbarPage() {
       <header className="bg-gray-800 shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-7">
-            {/* Logo */}
+          
             <div>
               <h1 className="text-2xl font-bold text-white">
                 Exam <span className="text-teal-400">track</span>
               </h1>
             </div>
 
-            {/* Desktop Navigation */}
+          
             <div className="hidden md:flex items-center space-x-6">
               <div className="flex items-center space-x-4">
                 <button className="text-gray-300 hover:text-white text-sm transition-colors">
@@ -81,7 +81,7 @@ export default function NavbarPage() {
               </button>
             </div>
 
-            {/* Mobile menu button */}
+         
             <div className="md:hidden">
               <button
                 onClick={toggleMobileMenu}
@@ -113,7 +113,7 @@ export default function NavbarPage() {
             </div>
           </div>
 
-          {/* Mobile Navigation Menu */}
+
           {isMobileMenuOpen && (
             <div className="md:hidden border-t border-gray-700 pt-4 pb-3">
               <div className="flex flex-col space-y-3">
