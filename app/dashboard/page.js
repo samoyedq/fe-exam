@@ -314,34 +314,10 @@ export default function DashboardPage() {
                               )}
                             </td>
                             <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                              {record.timeIn
-                                ? new Date(
-                                    `1970-01-01T${
-                                      record.timeIn.length <= 8
-                                        ? record.timeIn
-                                        : "00:00:00"
-                                    }`
-                                  ).toLocaleTimeString("en-US", {
-                                    hour12: true,
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  })
-                                : "-"}
+                              {record.timeIn}
                             </td>
                             <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                              {record.timeOut
-                                ? new Date(
-                                    `1970-01-01T${
-                                      record.timeOut.length <= 8
-                                        ? record.timeOut
-                                        : "00:00:00"
-                                    }`
-                                  ).toLocaleTimeString("en-US", {
-                                    hour12: true,
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  })
-                                : "-"}
+                              {record.timeOut}
                             </td>
                           </tr>
                         ))}
